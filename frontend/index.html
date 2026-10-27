@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scheduler &amp; Memory Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">self-healing os &mdash; live run viewer</p>
+  <h1>Scheduler &amp; memory monitor</h1>
+  <p class="sub">Runs the real scheduler + memory manager + anomaly pipeline on the backend, on demand, and shows what happened tick by tick.</p>
+
+  <div class="controls">
+    <div class="tabs" id="tabs"></div>
+    <div class="run-controls">
+      <label>seed <input type="number" id="seedInput" value="999"></label>
+      <button id="runBtn">Run simulation</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div id="statusMsg" class="status"></div>
+
+  <div id="results" hidden>
+    <div class="stats" id="stats"></div>
+
+    <div class="panel" id="rollPanel">
+      <h2>Process timeline</h2>
+      <p class="desc">Which PID held the CPU each tick. Hover to read a tick; markers above the strip show detect / recovery / verified moments.</p>
+      <div id="rollWrap"><canvas id="pianoRoll"></canvas></div>
+      <div id="rollLabel">&nbsp;</div>
+      <div class="legend" id="rollLegend"></div>
+    </div>
+
+    <div class="two-col" id="chartsRow">
+      <div class="panel">
+        <h2>Ready queue &amp; wait time</h2>
+        <p class="desc">Total processes waiting, and their average accumulated wait.</p>
+        <div class="chart-box"><canvas id="queueChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h2>Memory &amp; page faults</h2>
+        <p class="desc">Frame utilization (line) against faults that tick (bars).</p>
+        <div class="chart-box"><canvas id="memChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="panel" id="eventsPanel">
+      <h2>Detect &rarr; diagnose &rarr; recover</h2>
+      <p class="desc" id="eventsDesc"></p>
+      <ul class="events" id="eventsList"></ul>
+    </div>
+  </div>
+
+  <footer>Backend: FastAPI running the actual scheduler/memory_manager/anomaly_detector modules, not pre-recorded data.</footer>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
